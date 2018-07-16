@@ -1,15 +1,14 @@
-let p = this
+p=this
 function setup(){
   createCanvas(window.innerWidth,window.innerHeight);
   p.frameRate(60)
 }
-
 let width = this.width
 let height = this.height
 let lineTick = 0
 let orbitals = []
 let radii = []
-
+let resize = false;
 //HSB to RGB color function taken from ___
 function hsvToRgb(h, s, v) {
   var r, g, b;
@@ -108,7 +107,7 @@ function Orbit(x, y, radius, p) {
   this.updateLines = function(p) {
     p.stroke(this.lr, this.lg, this.lb, this.alpha) // sets the line color
     for (let l of this.lines) {
-      l.render()
+      l.render() //// TODO: Make each grouping of lines a graphic that doesn't need to be redrawn every frame.
     }
   }
 }
@@ -116,7 +115,7 @@ function Orbit(x, y, radius, p) {
 function Line(x1, y1, x2, y2, p) {
   this.render = function() {
     p.strokeWeight(1)
-    p.line(x1, y1, x2, y2);
+    p.line(x1 + p.width/2, y1 + p.height/2, x2 + p.width/2, y2 + p.height/2);
   }
 }
 function draw(){
@@ -144,8 +143,8 @@ document.onmousedown = function(u){
       radii.push(radius);
     }
   }
-
-  if (lineTick >= 4) {
+//if resized, then the program waits a tick to draw the line. This stops it from drawing a line to the pre-resize positions.
+  if (lineTick >= 4 && !resize){
     for (let i = 0; i < orbitals.length - 1; i++) {
       let x1 = orbitals[i].x
       let y1 = orbitals[i].y
@@ -154,11 +153,12 @@ document.onmousedown = function(u){
       orbitals[i].lr = (orbitals[i].red + orbitals[i + 1].red) / 2
       orbitals[i].lg = (orbitals[i].green + orbitals[i + 1].green) / 2
       orbitals[i].lb = (orbitals[i].blue + orbitals[i + 1].blue) / 2
-      orbitals[i].lines.push(new Line(x1, y1, x2, y2, p))
+      orbitals[i].lines.push(new Line(x1 - p.width/2, y1-p.height/2, x2-p.width/2, y2-p.height/2, p))
       }
       lineTick = 0
     } else {
       lineTick++
+      resize = false
     }
   for (let o of orbitals) {
     o.update();
@@ -166,5 +166,6 @@ document.onmousedown = function(u){
 }
 
 function windowResized(){
+  resize = true
   resizeCanvas(window.innerWidth,window.innerHeight)
 }
