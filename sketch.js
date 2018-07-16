@@ -46,7 +46,6 @@ function getRadius(x, y) {
   let centerY = p.height / 2
   let newX = x - centerX
   let newY = y - centerY
-  console.log(newX + " " + newY)
   return Math.sqrt(Math.pow(newX, 2) + Math.pow(newY, 2));
 }
 
@@ -144,15 +143,11 @@ function draw() {
   // draw here
 
   document.onmousedown = function(u) {
-    console.log(u)
-    console.log(radii)
-    console.log(orbitals)
     let radius = Math.round(getRadius(u.clientX, u.clientY) / 50) * 50
     //drawuser(u,p,radius)
     if (radii.includes(radius)) {
       orbitals[radii.indexOf(radius)].age = 0;
     } else if (radius >= 0) {
-      console.log("bleh")
       orbitals.push(new Orbit(u.clientX, u.clientY, radius, p))
       radii.push(radius);
     }
@@ -179,7 +174,8 @@ function draw() {
   }
 }
 
-function windowResized() {
-  resize = true
-  resizeCanvas(window.innerWidth, window.innerHeight)
+
+function windowResized(){
+    resize = true
+    resizeCanvas(window.innerWidth, window.innerHeight)
 }
