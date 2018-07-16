@@ -1,6 +1,7 @@
-p=this
-function setup(){
-  createCanvas(window.innerWidth,window.innerHeight);
+p = this
+
+function setup() {
+  createCanvas(window.innerWidth, window.innerHeight);
   p.frameRate(60)
 }
 let width = this.width
@@ -18,21 +19,34 @@ function hsvToRgb(h, s, v) {
   var q = v * (1 - f * s);
   var t = v * (1 - (1 - f) * s);
   switch (i % 6) {
-    case 0: r = v, g = t, b = p; break;
-    case 1: r = q, g = v, b = p; break;
-    case 2: r = p, g = v, b = t; break;
-    case 3: r = p, g = q, b = v; break;
-    case 4: r = t, g = p, b = v; break;
-    case 5: r = v, g = p, b = q; break;
+    case 0:
+      r = v, g = t, b = p;
+      break;
+    case 1:
+      r = q, g = v, b = p;
+      break;
+    case 2:
+      r = p, g = v, b = t;
+      break;
+    case 3:
+      r = p, g = q, b = v;
+      break;
+    case 4:
+      r = t, g = p, b = v;
+      break;
+    case 5:
+      r = v, g = p, b = q;
+      break;
   }
-  return [ r * 255, g * 255, b * 255 ];
+  return [r * 255, g * 255, b * 255];
 }
-function getRadius(x,y) {
+
+function getRadius(x, y) {
   let centerX = p.width / 2
   let centerY = p.height / 2
   let newX = x - centerX
   let newY = y - centerY
-  console.log(newX +" " +newY)
+  console.log(newX + " " + newY)
   return Math.sqrt(Math.pow(newX, 2) + Math.pow(newY, 2));
 }
 
@@ -60,7 +74,7 @@ function Orbit(x, y, radius, p) {
   this.alpha = 255
   //(0-300),100,50
   p.colorMode('hsv');
-  this.color = hsvToRgb(((getRadius(x,y))/350),1,1)
+  this.color = hsvToRgb(((getRadius(x, y)) / 350), 1, 1)
   p.colorMode('rgb');
   this.red = this.color[0]
   this.green = this.color[1]
@@ -73,19 +87,19 @@ function Orbit(x, y, radius, p) {
   this.angle = Math.atan2((y - p.height / 2), (x - p.width / 2)); //Only works for half of circle?
   this.x = p.width / 2 + this.radius * Math.cos(this.angle)
   this.y = p.height / 2 + this.radius * Math.sin(this.angle)
-  this.speed = p.random([-1,1,1,1]) * 2 * Math.PI / this.diameter
+  this.speed = p.random([-1, 1, 1, 1]) * 2 * Math.PI / this.diameter
   this.update = function() {
     this.x = p.width / 2 + this.radius * Math.cos(this.angle)
     this.y = p.height / 2 + this.radius * Math.sin(this.angle)
     p.stroke(255, parseInt(this.alpha))
     p.strokeWeight(1)
     p.noFill()
-    if(this.expand < Math.PI){ //runs the pretty opening animation
+    if (this.expand < Math.PI) { //runs the pretty opening animation
       this.startAngle = this.angle
-      p.arc(p.width/2,p.height/2,this.diameter,this.diameter,this.startAngle,this.startAngle + this.expand)
-      p.arc(p.width/2,p.height/2,this.diameter,this.diameter,this.startAngle-this.expand,this.startAngle)
+      p.arc(p.width / 2, p.height / 2, this.diameter, this.diameter, this.startAngle, this.startAngle + this.expand)
+      p.arc(p.width / 2, p.height / 2, this.diameter, this.diameter, this.startAngle - this.expand, this.startAngle)
       this.expand += .1
-    } else{
+    } else {
       p.ellipse(p.width / 2, p.height / 2, this.radius * 2) //orbit
     }
     p.fill(this.red, this.green, this.blue, this.alpha)
@@ -93,9 +107,9 @@ function Orbit(x, y, radius, p) {
     p.ellipse(this.x, this.y, 20)
     this.angle += this.speed;
     this.age++
-    if ((this.age >= 750 && orbitals.length >= 4 && orbitals.indexOf(this) == 0) || (orbitals.length >= 5 && orbitals.indexOf(this) == 0) || this.lines.length > 700) { //If orbital is old on cluttered screen or if has been vacant for a while.
-      this.decay = true
-    }
+      if ((this.age >= 750 && orbitals.length >= 4 && orbitals.indexOf(this) == 0) || (orbitals.length >= 5 && orbitals.indexOf(this) == 0) || this.lines.length > 700) { //If orbital is old on cluttered screen or if has been vacant for a while.
+        this.decay = true
+      }
     if (this.decay) {
       this.alpha -= 1
       if (this.alpha < 0) {
@@ -115,11 +129,11 @@ function Orbit(x, y, radius, p) {
 function Line(x1, y1, x2, y2, p) {
   this.render = function() {
     p.strokeWeight(1)
-    p.line(x1 + p.width/2, y1 + p.height/2, x2 + p.width/2, y2 + p.height/2);
+    p.line(x1 + p.width / 2, y1 + p.height / 2, x2 + p.width / 2, y2 + p.height / 2);
   }
 }
-function draw(){
-  /* this == pb.p5 == p */
+
+function draw() {
   p.background('#100030')
 
   p.fill("#EEEE00")
@@ -129,11 +143,11 @@ function draw(){
   p.ellipse(p.width / 2, p.height / 2, 50)
   // draw here
 
-document.onmousedown = function(u){
-  console.log(u)
-  console.log(radii)
-  console.log(orbitals)
-    let radius = Math.round(getRadius(u.clientX,u.clientY) / 50) * 50
+  document.onmousedown = function(u) {
+    console.log(u)
+    console.log(radii)
+    console.log(orbitals)
+    let radius = Math.round(getRadius(u.clientX, u.clientY) / 50) * 50
     //drawuser(u,p,radius)
     if (radii.includes(radius)) {
       orbitals[radii.indexOf(radius)].age = 0;
@@ -143,8 +157,8 @@ document.onmousedown = function(u){
       radii.push(radius);
     }
   }
-//if resized, then the program waits a tick to draw the line. This stops it from drawing a line to the pre-resize positions.
-  if (lineTick >= 4 && !resize){
+  //if resized, then the program waits a tick to draw the line. This stops it from drawing a line to the pre-resize positions.
+  if (lineTick >= 4 && !resize) {
     for (let i = 0; i < orbitals.length - 1; i++) {
       let x1 = orbitals[i].x
       let y1 = orbitals[i].y
@@ -153,19 +167,19 @@ document.onmousedown = function(u){
       orbitals[i].lr = (orbitals[i].red + orbitals[i + 1].red) / 2
       orbitals[i].lg = (orbitals[i].green + orbitals[i + 1].green) / 2
       orbitals[i].lb = (orbitals[i].blue + orbitals[i + 1].blue) / 2
-      orbitals[i].lines.push(new Line(x1 - p.width/2, y1-p.height/2, x2-p.width/2, y2-p.height/2, p))
-      }
-      lineTick = 0
-    } else {
-      lineTick++
-      resize = false
+      orbitals[i].lines.push(new Line(x1 - p.width / 2, y1 - p.height / 2, x2 - p.width / 2, y2 - p.height / 2, p))
     }
+    lineTick = 0
+  } else {
+    lineTick++
+    resize = false
+  }
   for (let o of orbitals) {
     o.update();
   }
 }
 
-function windowResized(){
+function windowResized() {
   resize = true
-  resizeCanvas(window.innerWidth,window.innerHeight)
+  resizeCanvas(window.innerWidth, window.innerHeight)
 }
