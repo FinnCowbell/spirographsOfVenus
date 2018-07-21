@@ -147,7 +147,7 @@ function draw() {
     //drawuser(u,p,radius)
     if (radii.includes(radius)) {
       orbitals[radii.indexOf(radius)].age = 0;
-    } else if (radius >= 0) {
+    } else if (radius >= 25) { //No clicking on the sun!
       orbitals.push(new Orbit(u.clientX, u.clientY, radius, p))
       radii.push(radius);
     }
