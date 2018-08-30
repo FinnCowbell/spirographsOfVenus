@@ -10,35 +10,23 @@ let lineTick = 0
 let orbitals = []
 let radii = []
 let resize = false;
-//HSB to RGB color function taken from ___
-function hsvToRgb(h, s, v) {
-  var r, g, b;
-  var i = Math.floor(h * 6);
-  var f = h * 6 - i;
-  var p = v * (1 - s);
-  var q = v * (1 - f * s);
-  var t = v * (1 - (1 - f) * s);
-  switch (i % 6) {
-    case 0:
-      r = v, g = t, b = p;
-      break;
-    case 1:
-      r = q, g = v, b = p;
-      break;
-    case 2:
-      r = p, g = v, b = t;
-      break;
-    case 3:
-      r = p, g = q, b = v;
-      break;
-    case 4:
-      r = t, g = p, b = v;
-      break;
-    case 5:
-      r = v, g = p, b = q;
-      break;
-  }
-  return [r * 255, g * 255, b * 255];
+//HSB to RGB color function taken from http://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
+function hsvToRgb(h, s, v){
+    var r, g, b;
+    var i = Math.floor(h * 6);
+    var f = h * 6 - i;
+    var p = v * (1 - s);
+    var q = v * (1 - f * s);
+    var t = v * (1 - (1 - f) * s);
+    switch(i % 6){
+        case 0: r = v, g = t, b = p; break;
+        case 1: r = q, g = v, b = p; break;
+        case 2: r = p, g = v, b = t; break;
+        case 3: r = p, g = q, b = v; break;
+        case 4: r = t, g = p, b = v; break;
+        case 5: r = v, g = p, b = q; break;
+    }
+    return [r * 255, g * 255, b * 255];
 }
 
 function getRadius(x, y) {
@@ -152,13 +140,13 @@ function draw() {
     }
   }
   //if resized, then the program waits a tick to draw the line. This stops it from drawing a line to the pre-resize positions.
-  if (lineTick >= 4 && !resize) { //allows for resizing the lines
+  if (lineTick >= 4 && !resize) {
     for (let i = 0; i < orbitals.length - 1; i++) {
       let x1 = orbitals[i].x
       let y1 = orbitals[i].y
       let x2 = orbitals[i + 1].x
       let y2 = orbitals[i + 1].y
-      orbitals[i].lr = (orbitals[i].red + orbitals[i + 1].red) / 2
+      orbitals[i].lr = (orbitals[i].red + orbitals[i + 1].red) / 2 //combines the color of the two orbitals for the line.
       orbitals[i].lg = (orbitals[i].green + orbitals[i + 1].green) / 2
       orbitals[i].lb = (orbitals[i].blue + orbitals[i + 1].blue) / 2
       orbitals[i].lines.push(new Line(x1 - p.width / 2, y1 - p.height / 2, x2 - p.width / 2, y2 - p.height / 2, p))
@@ -168,13 +156,12 @@ function draw() {
     lineTick++
     resize = false
   }
-  for (let o of orbitals) {
+  for (let o of orbitals) { //draws all orbitals last so they are not being overlapped by anything.
     o.update();
   }
 }
 
-
 function windowResized(){
-    resize = true
+    resize = true;
     resizeCanvas(window.innerWidth, window.innerHeight)
 }
