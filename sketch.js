@@ -106,15 +106,17 @@ function Orbit(x, y, radius, p) {
     p.ellipse(this.x, this.y, 20)
     this.angle += this.speed;
     this.age++
-      if ((this.age >= 750 && orbitals.length >= 4 && orbitals.indexOf(this) == 0) || (orbitals.length >= 5 && orbitals.indexOf(this) == 0) || this.lines.length > 700) { //If orbital is old on cluttered screen or if has been vacant for a while.
-        this.decay = true
-      }
     if (this.decay) {
       this.alpha -= 1
       if (this.alpha < 0) {
+        this.alpha = 255;
         radii.splice(radii.indexOf(this.radius), 1)
         orbitals.splice(orbitals.indexOf(this), 1)
       }
+    }
+    if ((orbitals.length >= 5 || this.lines.length >= 1000 )&& orbitals.indexOf(this) == 0) {
+      //If orbital is old on cluttered screen or if has been vacant for a while.
+      this.decay = true
     }
   }
   this.updateLines = function(p) {
@@ -133,14 +135,11 @@ function Line(x1, y1, x2, y2, p) {
 }
 
 function draw() {
-  p.background('#100030')
-
-  p.fill("#EEEE00")
-  for (let o of orbitals) {
-    o.updateLines(p)
-  }
-  p.ellipse(p.width / 2, p.height / 2, 50)
-  // draw here
+  p.background('#100030');
+  for (let o of orbitals) { o.updateLines(p) }// lines are on the furthest back layer.
+  p.fill("#EEEE00");
+  p.noStroke();
+  p.ellipse(p.width / 2, p.height / 2, 50); // sun
 
   document.onmousedown = function(u) {
     let radius = Math.round(getRadius(u.clientX, u.clientY) / 50) * 50
@@ -153,7 +152,7 @@ function draw() {
     }
   }
   //if resized, then the program waits a tick to draw the line. This stops it from drawing a line to the pre-resize positions.
-  if (lineTick >= 4 && !resize) {
+  if (lineTick >= 4 && !resize) { //allows for resizing the lines
     for (let i = 0; i < orbitals.length - 1; i++) {
       let x1 = orbitals[i].x
       let y1 = orbitals[i].y
