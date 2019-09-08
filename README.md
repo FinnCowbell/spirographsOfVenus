@@ -1,5 +1,10 @@
-# spirographsOfVenus
-A replication of my _MoMath Hackathon 2018_ exhibit to publish on Finnnav.in
+# Spirographs Of Venus
+A replication of my _MoMath Hackathon 2018_ exhibit
+
+## Controls:
+- Click anywhere to create new planets
+- Press ESC to remove all planets
+- Press P to toggle lines being created
 ___
 This project won grand prize in it's category! To learn more about it, [view the competition Github page][1]
 
