@@ -146,7 +146,7 @@ function updateOrbitals(){
     o.update();
   }
   if(orbitals.length > 0){
-    if(orbitals.length >= maxOrbitals || orbitals[0].lines.length >= MaxLines){//Erases the oldest orbital.
+    if(orbitals.length >= MaxOrbitals || orbitals[0].lines.length >= MaxLines){//Erases the oldest orbital.
       orbitals[0].decay = true
     }
     if(orbitals[0].queueDelete == true){ 
