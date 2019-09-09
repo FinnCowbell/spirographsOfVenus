@@ -9,15 +9,17 @@ function setup() {
   }
 }
 
-var frameRate = 60
-var OrbitalRadiusPadding = 50
+var frameRate = 60;
+var OrbitalRadiusPadding = 50;
+var MaxStars = 500;
+var MaxOrbitals = 5;
+let MaxLines = 750; //Determine best value here.
 
 
 let width = p.width
 let height = p.height
 let lineTick = 0;
 var LineDistance = 4;
-let maxLines = 750; //Determine best value here.
 let newLines = true;
 let turbo = false;
 
@@ -144,7 +146,7 @@ function updateOrbitals(){
     o.update();
   }
   if(orbitals.length > 0){
-    if(orbitals.length >= 8 || orbitals[0].lines.length >= 750){//Erases the oldest orbital.
+    if(orbitals.length >= maxOrbitals || orbitals[0].lines.length >= MaxLines){//Erases the oldest orbital.
       orbitals[0].decay = true
     }
     if(orbitals[0].queueDelete == true){ 
@@ -236,7 +238,7 @@ function draw() { //Layering: space, stars, lines, sun, planets.
       resizedLastTick = false
     }
   }
-  if(stars.length >= 50 && Math.random() < .02){
+  if(stars.length >= 50 && Math.random() < (-100000/stars.length)/MaxStars + 1){
     stars.splice(0,1);
   }//1/1000 chance
 }
