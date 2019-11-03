@@ -1,5 +1,7 @@
-# Spirographs Of Venus
-A replication of my _MoMath Hackathon 2018_ exhibit
+# What the heck's a Canvas Port?
+The original version of this project was created in processing. That was great becausde It made laying down the groundwork very easy. However, as time went on I noticed Processing was named that because it used a lot of it (processing power. get it? haha).
+
+Therefore, one weekend I decided to port the original game to a canvas. My computer's fans no longer go wild when I have more than 3 planets on the screen.
 
 ## Controls:
 - Click anywhere to create new planets
