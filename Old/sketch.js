@@ -31,7 +31,7 @@ let spaceColor = '#100030'
 let sunColor = "#EFEF00"
 let sunBorder = "#ffff00"
 let sunRadius = 25;
-let orbitalSize = 10; //orbital radius
+let orbitalRadius = 10; //orbital radius
 
 let resizedLastTick = false;
 
