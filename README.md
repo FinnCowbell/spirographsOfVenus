@@ -3,6 +3,8 @@ The original version of this project was created in processing. That was great b
 
 Therefore, one weekend I decided to port the original game to a canvas. My computer's fans no longer go wild when I have more than 3 planets on the screen.
 
+Now, I work to optimize the program further, and add additional elements without the limitations of Processing.
+
 ## Controls:
 - Click anywhere to create new planets
 - Press ESC to remove all planets

@@ -8,7 +8,7 @@ var OrbitalRadiusPadding = 50;
 var MaxStars = 500;
 var MaxOrbitals = 7;
 var orbitalSize = 5;
-let MaxLines = 750; //Determine best value here.
+var MaxLines = 500; //Determine best value here.
 
 let lineTick = 0;
 var LineDistance = 4;
@@ -34,7 +34,6 @@ let sunRadius = 5;
 // ctx.fillStyle = sunColor;
 // ctx.strokeStyle = sunBorder;
 // ctx.lineWidth = 2;
-// ctx.strokeWeight = 2;
 // ctx.strokeRect(75, 140, 150, 110);
 // ctx.beginPath();
 // ctx.ellipse(100, 100, 50, 50, Math.PI / 4, 0, 2 * Math.PI);
@@ -44,6 +43,7 @@ class spirographCanvas{
   constructor(c,ctx){
     this.c = c;
     this.ctx = ctx;
+    this.ctx.imageSmoothingEnabled = true;
     this.width = c.width;
     this.height = c.height;
     this.turbo = false;
@@ -139,7 +139,7 @@ class Sun{
   }
 }
 
-class Orbit{
+class Orbit {
   //Location Variables
   constructor(x,y,radius,orbitalSize = 7){
     this.x = p.width / 2 + this.radius * Math.cos(this.angle)
@@ -147,7 +147,7 @@ class Orbit{
     this.orbitalSize = orbitalSize
     this.radius = radius
     this.angle = Math.atan2((y - p.height / 2), (x - p.width / 2));
-    this.speed = 2 * Math.PI / this.radius * .45//Radial Velocity --Adjust calculation?
+    this.speed = Math.PI / this.radius//Radial Velocity --Adjust calculation?
     this.turbo = false;
     this.decay = false;
     this.fadeSpeed = .01;
@@ -164,6 +164,7 @@ class Orbit{
   }
 
   drawPath() {
+    p.alpha(this.alpha / 3);
     p.stroke(255);
     p.strokeWeight(1);
     p.noFill();
@@ -173,6 +174,7 @@ class Orbit{
     } else {
       p.ellipse(p.width / 2, p.height / 2, this.radius) //After, simply show the orbiting path.
     }
+    p.alpha(this.alpha);
   }
 
   drawPlanet() {
@@ -193,6 +195,8 @@ class Orbit{
     } else{
       this.angle += this.speed;
     }
+    // this.angle = this.angle % (2*Math.PI)
+
     if (this.decay) {
       this.alpha -= this.fadeSpeed;
       if (this.alpha < 0) {
@@ -206,7 +210,7 @@ class Orbit{
     for (let l of this.lines) {
       p.alpha(this.alpha)
       l.render() //// TODO: Make each grouping of lines a graphic that doesn't need to be redrawn every frame.
-      p.alpha(1);
+      p.alpha();
     }
   }
 }
@@ -262,7 +266,8 @@ function updateOrbitals(){
     o.update();
   }
   if(orbitals.length > 0){
-    if(orbitals.length >= MaxOrbitals || orbitals[0].lines.length >= MaxLines){//Erases the oldest orbital.
+    // || orbitals[0].lines.length >= MaxLines (Removed from deletion checker.)
+    if(orbitals.length >= MaxOrbitals){//Erases the oldest orbital.
       orbitals[0].decay = true
     }
     if(orbitals[0].queueDelete == true){ 
@@ -291,43 +296,29 @@ function clearOrbitals(){
     stars = [];
   }
 }
-function toggleLines(){
-  newLines = newLines == true ? false : true;
-}
-
-function speedUp(scale){
-  for(let o of orbitals){
-    o.speed *= scale
-  }
-  LineDistance *= 1/scale
-}
-
-function slowDown(scale){
-  for(let o of orbitals){
-    o.speed /= scale
-  }
-  LineDistance *= scale
-}
-
 
 document.onkeydown = function(u){
-  if(u.key == "Escape"){
-    clearOrbitals();
-  }
-  if(u.key == "Shift"){//double Speed?
-    for(o of orbitals){
-      o.turbo = true;
+  switch(u.key){
+    case "Escape":
+      clearOrbitals()
+      break;
+    case "Shift":
+      for(o of orbitals){
+        o.turbo = true;
+      }
+      break;
+    case "p":
+      toggleLines();
+      break;
     }
-  }
-  if(u.key == "p"){
-    toggleLines();
-  }
 }
 document.onkeyup = function(u){
-  if(u.key == "Shift"){
-    for(o of orbitals){
-      o.turbo = false;
-    }
+  switch(u.key){
+    case "Shift":
+      for(o of orbitals){
+        o.turbo = false;
+      }
+      break;
   }
 }
 
@@ -350,14 +341,13 @@ function hsvToRgb(h, s, v){
 }
 
 p = new spirographCanvas(c,ctx);
-p.ctx.translate(.5,.5);
+// p.ctx.translate(.5,.5);
 window.addEventListener('resize',() => p.queueResize = true,false);
 s = new Sun(p);
 p.resize();
 x = new Orbit(p.width/2,p.height/2, 100);
 console.log(x)
 setInterval(() => {
-  r
   if (p.queueResize){
     p.queueResize = false
     p.resize();
@@ -373,6 +363,9 @@ setInterval(() => {
   if (lineTick >= LineDistance && !p.queueResize) {
     //if resized, then the program waits a tick to draw the line. This stops it from drawing a line to the pre-resized positions.
     for (let i = 0; i < orbitals.length - 1; i++) {
+      if(orbitals[i].lines.length >= MaxLines){
+        continue //We dont want anymore lines for this guy!
+      }
       let x1 = orbitals[i].x
       let y1 = orbitals[i].y
       let x2 = orbitals[i + 1].x
