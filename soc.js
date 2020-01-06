@@ -1,12 +1,10 @@
-console.log("Hello World!")
-
 c = document.getElementById("stage");
 ctx = c.getContext('2d');
 
 var frameRate = 60;
 var OrbitalRadiusPadding = 50;
 var MaxStars = 500;
-var MaxOrbitals = 7;
+var MaxOrbitals = 12;
 var orbitalSize = 5;
 var MaxLines = 500; //Determine best value here.
 
@@ -346,7 +344,6 @@ window.addEventListener('resize',() => p.queueResize = true,false);
 s = new Sun(p);
 p.resize();
 x = new Orbit(p.width/2,p.height/2, 100);
-console.log(x)
 setInterval(() => {
   if (p.queueResize){
     p.queueResize = false
